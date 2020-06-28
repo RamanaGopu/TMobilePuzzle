@@ -1,0 +1,5 @@
+1) As it is using the latest version of angular, the Template type checking needs to be added in the tsConfig.json, So that it can be applicable throught the application. By that it strictly validates the template type checking. 
+- Images tag needs to have the alternate text on it. So, that when the image does'nt load or if it is having any error, the alternate text will be present on the UI. So, that it can be easily recognizable. 
+
+2) Accessibility ?
+- Accessibility is already handled by Angular Material in this code. So there is no additional changes required for the accessibility. Except the detailed description of the aria-label. 
