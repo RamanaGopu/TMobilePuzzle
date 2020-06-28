@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { fromEvent, Subject } from 'rxjs';
+import { map, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import {
   addToReadingList,
   clearSearch,
@@ -15,7 +17,9 @@ import { Book } from '@tmo/shared/models';
   templateUrl: './book-search.component.html',
   styleUrls: ['./book-search.component.scss']
 })
-export class BookSearchComponent implements OnInit {
+export class BookSearchComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('searchInput', {static: false}) searchInput: ElementRef<HTMLInputElement>;
+  ngUnsubscribe: Subject<any> = new Subject<any>();
   books: ReadingListBook[];
 
   searchForm = this.fb.group({
@@ -35,6 +39,24 @@ export class BookSearchComponent implements OnInit {
     this.store.select(getAllBooks).subscribe(books => {
       this.books = books;
     });
+  }
+
+  ngAfterViewInit(): void {
+    fromEvent(this.searchInput.nativeElement, 'keyup').pipe(
+      takeUntil(this.ngUnsubscribe),
+      map((i: any) => i.currentTarget.value),
+      debounceTime(500),
+      distinctUntilChanged()
+    )
+    .subscribe(() => {
+      this.searchBooks()
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+    this.ngUnsubscribe.unsubscribe();
   }
 
   formatDate(date: void | string) {
