@@ -35,6 +35,7 @@
             <button
               mat-flat-button
               color="primary"
+              data-testing="finished-text"
               (click)="addBookToReadingList(b)"
               [attr.aria-label]="'Want to Read' + b.title"
               [disabled]="b.isAdded|| b.isReadingComplete">

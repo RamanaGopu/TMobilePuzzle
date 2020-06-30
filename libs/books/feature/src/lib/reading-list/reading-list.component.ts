@@ -10,7 +10,7 @@ import { getReadingList, removeFromReadingList, markBookAsFinished} from '@tmo/b
 export class ReadingListComponent {
   readingList$ = this.store.select(getReadingList);
 
-  constructor(private readonly store: Store) {}
+  constructor(public readonly store: Store) {}
 
   removeFromReadingList(item) {
     this.store.dispatch(removeFromReadingList({ item }));
