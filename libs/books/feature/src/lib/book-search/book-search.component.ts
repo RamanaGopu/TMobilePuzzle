@@ -43,12 +43,6 @@ export class BookSearchComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-    this.ngUnsubscribe.unsubscribe();
-  }
-
   formatDate(date: void | string) {
     return date
       ? new Intl.DateTimeFormat('en-US').format(new Date(date))
@@ -77,5 +71,11 @@ export class BookSearchComponent implements OnInit, OnDestroy {
     } else {
       this.store.dispatch(clearSearch());
     }
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+    this.ngUnsubscribe.unsubscribe();
   }
 }
