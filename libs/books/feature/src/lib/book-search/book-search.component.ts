@@ -36,7 +36,7 @@ export class BookSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.store.select(getAllBooks).subscribe(books => {
+    this.store.select(getAllBooks).pipe(takeUntil(this.ngUnsubscribe)).subscribe(books => {
       this.books = books;
     });
   }
@@ -51,12 +51,6 @@ export class BookSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     .subscribe(() => {
       this.searchBooks()
     });
-  }
-
-  ngOnDestroy(): void {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-    this.ngUnsubscribe.unsubscribe();
   }
 
   formatDate(date: void | string) {
@@ -80,5 +74,11 @@ export class BookSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.store.dispatch(clearSearch());
     }
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+    this.ngUnsubscribe.unsubscribe();
   }
 }
