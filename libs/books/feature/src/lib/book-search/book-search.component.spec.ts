@@ -28,13 +28,12 @@ describe('ProductsListComponent', () => {
   });
 
   it('should invoke ngAfterViewInit', () => {
-    fixture.detectChanges();
-    spyOn(component, 'ngAfterViewInit');
-    expect(component.ngAfterViewInit).to.exist;
+    const searchBooksSpy = spyOn(component, 'searchBooks');
     const input = fixture.debugElement.query(By.css('input'));
     const keyUp = new Event('keyup');
     input.nativeElement.dispatchEvent(keyUp);
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('input')).nativeElement.value).to.equal('');
-  })
+    expect(searchBooksSpy).to.have.been.exist;
+    expect(component.searchForm.value.term).to.be.eq('', 'Keyup should update searchTerm');
+  });
 });
