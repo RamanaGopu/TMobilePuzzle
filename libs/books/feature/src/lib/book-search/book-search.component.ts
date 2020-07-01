@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import { takeUntil }from 'rxjs/operators';
 import {
   addToReadingList,
   clearSearch,
@@ -16,6 +18,7 @@ import { Book } from '@tmo/shared/models';
   styleUrls: ['./book-search.component.scss']
 })
 export class BookSearchComponent implements OnInit {
+  ngUnsubscribe: Subject<any> = new Subject<any>();
   books: ReadingListBook[];
 
   searchForm = this.fb.group({
@@ -32,7 +35,7 @@ export class BookSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.select(getAllBooks).subscribe(books => {
+    this.store.select(getAllBooks).pipe(takeUntil(this.ngUnsubscribe)).subscribe(books => {
       this.books = books;
     });
   }
@@ -58,5 +61,11 @@ export class BookSearchComponent implements OnInit {
     } else {
       this.store.dispatch(clearSearch());
     }
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+    this.ngUnsubscribe.unsubscribe();
   }
 }
