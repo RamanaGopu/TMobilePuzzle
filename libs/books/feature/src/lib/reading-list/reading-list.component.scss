@@ -18,6 +18,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    &:last-child {
+      flex-direction: row;
+    }
   }
 }
 
